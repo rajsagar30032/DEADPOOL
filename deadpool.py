@@ -1,6 +1,5 @@
 """Deadpool core"""
-import json
-import textblob
+from textblob import TextBlob
 from test_deadpool import statements
 
 
