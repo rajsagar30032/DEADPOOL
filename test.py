@@ -50,6 +50,11 @@ def analyze(df, statement):
     final_words = lemmatize_words(statement)
     n_rows,n_cols = df.shape
     
+    df_test = df.copy(deep= True)
+    #Convert all strings of our dataframe to lowercase for valid operations
+    for column in df_test.columns:
+        df_test[column] = map(lambda x: str(x).lower(), df_test[column])
+
 
     # Lists representing columns  comprising of  respective  words .
     col = []
@@ -69,8 +74,11 @@ def analyze(df, statement):
             if isinstance(df[column].iloc[0], basestring):
                 # If word lies in a particular column or not
                 if word.lower() in df[column].str.lower().values:
-                    col[df.columns.get_loc(column)].append(word)
+                    col[df.columns.get_loc(column)].append(word.lower())
     
+
+
+
     # if word is same as column name or not     
     for word in final_words:      
         for i in range(0,n_cols):         
@@ -98,72 +106,60 @@ def analyze(df, statement):
     # Length of tuples list
     len_tuple = len(tuples)
 
+    
     # Changing our data frame into list form
 
-    List_data =  map(list, df.values)
+    List_data =  map(list, df_test.values)
  
-    def Sum(sum,df,x,items,i):
-        if set(items) < set(i):
-            if df[x].dtype == object:
-                sum = sum + 1
-                                    
-            elif df[x].dtype == int: 
-                sum = sum + i[df.columns.get_loc(x)]
-
-            elif df[x].dtype == long: 
-                sum = sum + i[df.columns.get_loc(x)]
-
-            elif df[x].dtype == float:
-                sum = sum + i[df.columns.get_loc(x)]
-        return sum
     # Main Operation on Data frame as per Satement been asked
 
     print tuples
     print col_name
     print final_words
 
-    for items in tuples:
-        for x in col_name:
-                sum = 0
-                for i in List_data:
-                    for word in final_words:
-                        if word.lower() == "what":
-                            if set(items) < set(i):
-                                if df[x].dtype == object:
-                                    sum = sum + 1
-                                    
-                                elif df[x].dtype == int: 
-                                    sum = sum + i[df.columns.get_loc(x)]
-
-                                elif df[x].dtype == float:
-                                    sum = sum + i[df.columns.get_loc(x)]
-
-                                elif df[x].dtype == long: 
-                                    sum = sum + i[df.columns.get_loc(x)]
-                   
-
-                        if word.lower() == "how":
-                            if set(items) < set(i):
-                                if df[x].dtype == object:
-                                    sum = sum + 1
-                                    
-                                elif df[x].dtype == int: 
-                                    sum = sum + i[df.columns.get_loc(x)]
-
-                                elif df[x].dtype == long: 
-                                    sum = sum + i[df.columns.get_loc(x)]
-
-                                elif df[x].dtype == float:
-                                    sum = sum + i[df.columns.get_loc(x)]
-                if sum != 0:
-                    print sum   
-
-                        
-                            
-
-
 
     
+    def Total(tuples,col_name,List_data):
+        for items in tuples:
+            if col_name != []:
+                for x in col_name:
+                    sum = 0
+                    for i in List_data:
+                            if set(items) < set(i):
+                                if df[x].dtype == object:
+                                    sum = sum + 1
+                                    
+                                elif df[x].dtype == int: 
+                                    sum = sum + float(i[df.columns.get_loc(x)])
+
+                                elif df[x].dtype == float:
+                                    sum = sum + float(i[df.columns.get_loc(x)])
+
+                                elif df[x].dtype == long: 
+                                    sum = sum + float(i[df.columns.get_loc(x)])
+
+
+
+        
+        return sum   
+
+    for word in final_words:
+                        if word.lower() == "what":
+                            Ans = Total(tuples,col_name,List_data)
+                        if word.lower() == "how":
+                            Ans = Total(tuples,col_name,List_data)
+
+    if Ans != 0:
+        print Ans      
+
+
+        
+         
+
+   
+
+              
+
 
 if __name__ == '__main__':
     import argparse
